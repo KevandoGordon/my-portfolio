@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /visits/
+Disallow: /track.php
+
+Sitemap: https://kevandogordon.freedev.app/sitemap.xml

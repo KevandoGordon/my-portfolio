@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <url>
+    <loc>https://kevandogordon.freedev.app/</loc>
+    <lastmod>2026-10-26</lastmod>
+    <image:image><image:loc>https://kevandogordon.freedev.app/images/joat-web.jpg</image:loc></image:image>
+    <image:image><image:loc>https://kevandogordon.freedev.app/images/joat-mobile.jpg</image:loc></image:image>
+    <image:image><image:loc>https://kevandogordon.freedev.app/images/iteneri.jpg</image:loc></image:image>
+    <image:image><image:loc>https://kevandogordon.freedev.app/images/amber-car-rental.jpg</image:loc></image:image>
+    <image:image><image:loc>https://kevandogordon.freedev.app/images/north-star.jpg</image:loc></image:image>
+    <image:image><image:loc>https://kevandogordon.freedev.app/images/relieflinkja.jpg</image:loc></image:image>
+    <video:video>
+      <video:thumbnail_loc>https://kevandogordon.freedev.app/media/showreel.jpg</video:thumbnail_loc>
+      <video:title>Kevando Gordon — showreel</video:title>
+      <video:description>You've got the idea, I'll bring it to life: web apps, mobile apps and business systems built in Jamaica.</video:description>
+      <video:content_loc>https://kevandogordon.freedev.app/media/showreel.mp4</video:content_loc>
+      <video:duration>21</video:duration>
+    </video:video>
+  </url>
+</urlset>

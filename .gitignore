@@ -2,3 +2,7 @@
 /brag-output-2026-10-13-211129
 
 /images/*
+# visitor log: password and collected visitor data never go to GitHub
+dist/visits/config.php
+dist/visits/data/*
+!dist/visits/data/.htaccess

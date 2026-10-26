@@ -393,7 +393,6 @@
       });
     }).then(function () {
       form.reset();
-      if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: 'contact-form-sent', title: 'Contact form sent', event: true });
       showStatus('ok', '<strong>Thanks, ' + name.replace(/[<>&"]/g, '') + '!</strong> Your message is on its way. I\'ll get back to you soon.');
     }).catch(function () {
       showStatus('fail', 'Sorry, the message couldn\'t be sent right now. Please email me directly at <a href="mailto:' + TO + '">' + TO + '</a> or call <a href="tel:+18764424446">(876) 442-4446</a>.');
@@ -639,4 +638,43 @@
   });
   document.documentElement.addEventListener('mouseleave', function () { root.classList.add('cur-away'); });
   window.addEventListener('blur', function () { root.classList.add('cur-away'); });
+})();
+
+(function () {
+  'use strict';
+
+  /* ---------------- Visitor log: posts to track.php (read back at /visits/) ---------------- */
+  if (location.protocol === 'file:' || !navigator.sendBeacon) return;
+
+  var id = Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+  var started = Date.now();
+  var seen = {}, clicks = {};
+  var back = false;
+  try { back = !!localStorage.getItem('kg-seen'); localStorage.setItem('kg-seen', '1'); } catch (e) {}
+
+  function send(data) {
+    data.id = id;
+    try { navigator.sendBeacon('track.php', new Blob([JSON.stringify(data)], { type: 'application/json' })); } catch (e) {}
+  }
+
+  var tz = '';
+  try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+  send({ t: 'view', ref: document.referrer, path: location.pathname, tz: tz, scr: screen.width + 'x' + screen.height, back: back });
+
+  // Which sections came into view, and which tracked buttons and links were clicked
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { seen[e.target.id] = 1; io.unobserve(e.target); } });
+  }, { threshold: 0.25 });
+  Array.prototype.forEach.call(document.querySelectorAll('main > section[id]'), function (s) { io.observe(s); });
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest && e.target.closest('[data-track]');
+    if (el) clicks[el.getAttribute('data-track')] = 1;
+  }, true);
+  document.getElementById('contact-form') && document.getElementById('contact-form').addEventListener('submit', function () { clicks['contact-form-submit'] = 1; });
+
+  // Sent each time the tab is hidden; the viewer keeps the furthest point and longest time
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState !== 'hidden') return;
+    send({ t: 'leave', sections: Object.keys(seen), clicks: Object.keys(clicks), secs: Math.round((Date.now() - started) / 1000) });
+  });
 })();
