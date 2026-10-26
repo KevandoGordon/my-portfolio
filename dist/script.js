@@ -393,6 +393,7 @@
       });
     }).then(function () {
       form.reset();
+      if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: 'contact-form-sent', title: 'Contact form sent', event: true });
       showStatus('ok', '<strong>Thanks, ' + name.replace(/[<>&"]/g, '') + '!</strong> Your message is on its way. I\'ll get back to you soon.');
     }).catch(function () {
       showStatus('fail', 'Sorry, the message couldn\'t be sent right now. Please email me directly at <a href="mailto:' + TO + '">' + TO + '</a> or call <a href="tel:+18764424446">(876) 442-4446</a>.');
@@ -530,11 +531,29 @@
       var typer = section.querySelector('.type');
       var items = qsa('.reveal', section);
       (typer ? type(typer, 38) : Promise.resolve()).then(function () {
-        items.forEach(function (el, i) { revealIn(el, i * 110); });
+        // 80ms between siblings, capped at 6 so long lists don't drag
+        items.forEach(function (el, i) { revealIn(el, Math.min(i, 5) * 80); });
       });
     });
   }, { rootMargin: '0px 0px -15% 0px', threshold: 0.08 });
   sections.forEach(function (s) { io.observe(s); });
+
+  /* Depth: layered elements get --depth from -1 (below centre) to 1 (above); CSS moves far layers less */
+  var layered = qsa('.now-stack, .featured-shot');
+  var depthTicking = false;
+  function onDepth() {
+    var vh = window.innerHeight;
+    layered.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      if (r.bottom < -100 || r.top > vh + 100) return;
+      var d = (vh / 2 - (r.top + r.height / 2)) / vh;
+      el.style.setProperty('--depth', Math.max(-1, Math.min(1, d)).toFixed(3));
+    });
+    depthTicking = false;
+  }
+  window.addEventListener('scroll', function () { if (!depthTicking) { depthTicking = true; requestAnimationFrame(onDepth); } }, { passive: true });
+  window.addEventListener('resize', onDepth);
+  onDepth();
 })();
 
 (function () {
